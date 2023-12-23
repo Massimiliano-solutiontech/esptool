@@ -80,7 +80,7 @@ This guide explains how to select the boot mode correctly and describes the boot
    {IDF_TARGET_STRAP_BOOT_2_GPIO}
    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-   .. only:: not esp32c3
+   .. only:: esp32 or esp32s2 or esp32s3
 
       {IDF_TARGET_STRAP_BOOT_2_GPIO} must also be either left unconnected/floating, or driven Low, in order to enter the serial bootloader.
 
@@ -125,7 +125,7 @@ Automatic Bootloader
 
 As an example of auto-reset curcuitry implementation, check the `schematic <https://dl.espressif.com/dl/schematics/esp32_devkitc_v4-sch-20180607a.pdf>`_ of the ESP32 DevKitC development board:
 
--  The **Micro USB 5V & USB-UART** section shows the ``DTR`` and ``RTS`` control lines of the USB to serial converter chip connected to ``GPIO0`` and ``EN`` pins of the ESP module.
+-  The **Micro USB 5V & USB-UART** section shows the ``DTR`` and ``RTS`` control lines of the USB to serial converter chip connected to ``{IDF_TARGET_STRAP_BOOT_GPIO}`` and ``EN`` pins of the ESP module.
 -  Some OS and/or drivers may activate ``RTS`` and or ``DTR`` automatically when opening the serial port (true only for some serial terminal programs, not ``esptool.py``), pulling them low together and holding the ESP in reset. If ``RTS`` is wired directly to ``EN`` then RTS/CTS "hardware flow control" needs to be disabled in the serial program to avoid this.
    An additional circuitry is implemented in order to avoid this problem - if both ``RTS`` and ``DTR`` are asserted together, this doesn't reset the chip. The schematic shows this specific circuit with two transistors and its truth table.
 -  If this circuitry is implemented (all Espressif boards have it), adding a capacitor between the ``EN`` pin and ``GND`` (in the 1uF-10uF range) is necessary for the reset circuitry to work reliably. This is shown in the **ESP32 Module** section of the schematic.
@@ -241,7 +241,7 @@ Depending on the kind of hardware you have, it may also be possible to manually 
    ``boot:0xNN (DESCRIPTION)`` is the hex value of the strapping pins, as represented in the `GPIO_STRAP register <https://github.com/espressif/esp-idf/blob/release/v5.0/components/soc/{IDF_TARGET_PATH_NAME}/include/soc/gpio_reg.h>`__.
 
    The individual bit values are as follows:
-   
+
    .. only:: esp32
 
       -  ``0x01`` - GPIO5
@@ -308,7 +308,7 @@ Depending on the kind of hardware you have, it may also be possible to manually 
          clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
          mode:DIO, clock div:1
 
-   
+
    .. only:: not esp32
 
       ::
